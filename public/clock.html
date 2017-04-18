@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="m_m_div.css">-->
+
+    <title>clock</title>
+    <script type="text/javascript">
+      var $clock=null;
+
+      $(document).ready(function(){
+        // function clock(){
+
+        // }
+        $clock= $("#clock");
+        var value;
+
+        function addZero(value){
+
+          if(value<10){
+            value="0"+value;
+          }
+          return value;
+
+        }
+        function realTime(){
+          var pmam="";
+          var objDate= new Date();
+          var hours= objDate.getHours();
+          if (hours>12) {
+            pmam= "PM";
+            hours=hours-12;
+          }
+          else {
+            pmam="AM";
+          }
+          hours= addZero(hours);
+          var minutes= addZero(objDate.getMinutes());
+          var seconds= addZero(objDate.getSeconds());
+
+          var time=pmam+" "+hours+":"+minutes+":"+seconds;
+          $clock.html(time);
+        }
+
+
+
+        realTime();
+        setInterval(function(){
+          realTime();
+        },500);
+      })
+
+    </script>
+    <style media="screen">
+      html,div{
+        padding: 0;
+        margin: 0;
+      }
+      html{
+        font-size: 16px;
+      }
+      .m_m_div{
+        width: 100%;
+        height: 100%;
+        border: solid 1px black;
+      }
+      #clock_banner{
+        background-color: black;
+      }
+      #clock{
+        font-size: 10em;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pannel">
+      <div class="m_m_div" id="clock_banner">
+        <span class="m_m_obj" id="clock"></span>
+        <span class="m_m_obj_blank"></span>
+      </div>
+    </div>
+  </body>
+</html>
