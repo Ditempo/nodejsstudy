@@ -3,19 +3,28 @@
     <head>
         <meta charset="utf-8">
         <title>login</title>
+        <!--<script type='text/javascript'>
+            function sendit(){
+                var f=document.forms[0];
+                if(f.id.value){
+                    alert("아이디를 입력하세요");
+                    f.id.focus();
+                }
+            }
+        </script>-->
     </head>
     <body>
         <h1>register</h1>
-        <form action="/register" method="post">
+        <form id='registerform' action="/register" method="post">
             <p> id </p>
-            <p> <input type='text' name='id' ></p>
-            <p> name</p>
-            <p> <input type='text' name='name'></p>
-            <p> age</p>
-            <p> <input type='text' name="age"></p>
+            <p> <input type='text' name='id' id='id' placeholder='아이디를 입력하세요'></p>
             <p> password</p>
-            <p> <input type='password' name='password'></p>
-            <p> <input type='submit' name='submit'></p>
+            <p> <input type='password' name='password'id='password' placeholder='비밀번호를 입력하세요'></p>
+            <p> name</p>
+            <p> <input type='text' name='name' id='name'placeholder='이름을 입력하세요'></p>
+            <p> age</p>
+            <p> <input type='text' name="age" id='age'placeholder='나이를 입력하세요'></p>
+            <p> <input type='submit' name='회원가입완료'></p>
       </form>
   </body>
 </html>
