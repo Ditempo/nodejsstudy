@@ -1,4 +1,2 @@
-#Hello!!
-##I'm handsome Jang Yeong Hoon!!!!
- - I'm handsome
- - I'm good at programming.
+#Ditempo
+#gsw2205@gmail.com
