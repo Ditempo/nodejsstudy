@@ -1,0 +1,1 @@
+var local_login=require('./passport/local_login')\
