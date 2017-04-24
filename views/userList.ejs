@@ -11,7 +11,7 @@
                 <% for(var i=0;i<length;i++){ %>
                     <!--<%= results[i]._doc.id %>
                     <%= results[i]._doc.name %>-->
-                   <li> <%= results[i]._doc.id+':'+results[i]._doc.name %> </li>
+                   <li> <span>아이디 : </span> <%=  results[i]._doc.id+'  이름 :'+results[i]._doc.name %> </li>
                 <% } %>
             </ul>
         </div>
