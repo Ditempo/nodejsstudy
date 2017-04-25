@@ -11,7 +11,11 @@
                 <% for(var i=0;i<length;i++){ %>
                     <!--<%= results[i]._doc.id %>
                     <%= results[i]._doc.name %>-->
-                   <li> <span>아이디 : </span> <%=  results[i]._doc.id+'  이름 :'+results[i]._doc.name %> </li>
+                   <li> <span>아이디 : </span> <%= results[i]._doc.id %> 
+                        <span>이름 : </span> <%= results[i]._doc.name %> 
+                        <span>이메일 : </span> <%= results[i]._doc.email %> 
+                        
+                        </li>
                 <% } %>
             </ul>
         </div>
