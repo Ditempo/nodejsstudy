@@ -13,6 +13,8 @@ var LocalStrategy=require('passport-local').Strategy;
 
 var app=express();
 
+// var config=require('./mongodbLogin_Config');
+// console.log('config.server_port : %d',config.server_port);
 var port=1222;
 
 app.set('views', __dirname + '/views');
@@ -55,68 +57,77 @@ function connectDB(){
     database.on('disconneted',connectDB);
 }
 
-passport.serializeUser(function(user, done){
-    console.log('serializeUser() 호출됨');
-    console.dir(user);
+// passport.serializeUser(function(user, done){
+//     console.log('serializeUser() 호출됨');
+//     console.dir(user);
 
-    done(null,user);
-});
-passport.deserializeUser(function(user,done){
-    console.log('deserializeUser() 호출됨');
-    console.dir(user);
+//     done(null,user);
+// });
+// passport.deserializeUser(function(user,done){
+//     console.log('deserializeUser() 호출됨');
+//     console.dir(user);
 
-    done(null,user);
-});
-passport.use('local-login',new LocalStrategy({
-    usernameField : 'email',
-    passwordField : 'password',
-    passReqToCallback : true
-    },function(req,id,password,done){
-        console.log('passport의 local-login 호출됨 : '+id+','+password);
-        var database= app.get('database');
-        database.UserModel.findOne({'email':email},function(err,user){
-        if(err){return done(err);}
-        if(!user){
-            console.log('계정이 일치하지 않음');
-            return done(null,false,req.flash('loginMessage','등록된 계정이 없습니다'));
-        }
+//     done(null,user);
+// });
+// passport.use('local-login',new LocalStrategy({
+//     usernameField : 'email',
+//     passwordField : 'password',
+//     passReqToCallback : true
+//     },function(req,id,password,done){
+//         console.log('passport의 local-login 호출됨 : '+id+','+password);
+//         var database= app.get('database');
+//         database.UserModel.findOne({'email':email},function(err,user){
+//         if(err){return done(err);}
+//         if(!user){
+//             console.log('계정이 일치하지 않음');
+//             return done(null,false,req.flash('loginMessage','등록된 계정이 없습니다'));
+//         }
 
-        var authenticated= user.authenticate(password, user._doc.password);
+//         var authenticated= user.authenticate(password, user._doc.password);
 
-        if(!authenticated){
-            console.log('비밀번호가 일치 하지 않음');
-            return done(null,false, req.flash('loginMessage','비밀번호가 일치하지 않습니다'));
-        }
-        console.log('계정과 비밀번호가 일치함');
-        return done(null,user);
-    });
-}));
-passport.use('login-signup',new LocalStrategy({
-    usernameField: 'email',
-    passwordField : 'password',
-    passReqToCallback : true
-    },function(req,email,password,done){
-        var paramName=req.param.body.name;
-        console.log('passport의 local-signup 호출됨 : ' +email+','+password+','+paramName);
+//         if(!authenticated){
+//             console.log('비밀번호가 일치 하지 않음');
+//             return done(null,false, req.flash('loginMessage','비밀번호가 일치하지 않습니다'));
+//         }
+//         console.log('계정과 비밀번호가 일치함');
+//         return done(null,user);
+//     });
+// }));
+// passport.use('login-signup',new LocalStrategy({
+//     usernameField: 'email',
+//     passwordField : 'password',
+//     passReqToCallback : true
+//     },function(req,email,password,done){
+//         var paramName=req.body.name;
+//         console.log('passport의 local-signup 호출됨 : ' +email+','+password+','+paramName);
 
-        process.nextTick(function(){
-            var database=app.get('database');
-            database.UserModel.findOne({'email':email},function(err,user){
-                if(err){return done(err);}
-                if(user){
-                    console.log('기존에 계정이 있음');
-                    return done(null,false,req.flash('signupMessage','계정이 이미 있습니다'));
-                }else{
-                    var user=new database.UserModel({'email':email,'password':password,'name':paramName});
-                    user.save(function(err){
-                        if(err){throw err;}
-                        console.log('사용자 데이터 추가함');
-                        return done(null,user);
-                    });
-                }
-            });
-        });
-}));
+//         process.nextTick(function(){
+//             var database=app.get('database');
+//             database.UserModel.findOne({'email':email},function(err,user){
+//                 if(err){return done(err);}
+//                 if(user){
+//                     console.log('기존에 계정이 있음');
+//                     return done(null,false,req.flash('signupMessage','계정이 이미 있습니다'));
+//                 }else{
+//                     var user=new database.UserModel({'email':email,'password':password,'name':paramName});
+//                     user.save(function(err){
+//                         if(err){throw err;}
+//                         console.log('사용자 데이터 추가함');
+//                         return done(null,user);
+//                     });
+//                 }
+//             });
+//         });
+// }));
+// function isLoggedIn(req,res,next){
+//     console.log('isLoggedIn 미들웨어 호출됨');
+
+//     if(req.isAuthenticated()){
+//         return next();
+        
+//     }
+//     res.redirect('/');
+// }
 var authUser=function(database,id,password,callback){
     console.log('in authUser');
 
@@ -183,11 +194,23 @@ var listuser=function(callback){
     });
 }
 
-route_loader.init(app);
+// route_loader.init(app);
 
+// app.get('/',function(req,res){
+//     console.log('/패스');
+//     res.render('index',{});
+// })
+
+// app.get('/login',function(req,res){
+//     // res.sendfile(__dirname+"/public/m_login.html");
+//     res.render('login',{message : req.flash('loginMessage')});
+// }).post('/login',passport.authenticate('local-login',{
+//     successRedirect : '/profile',
+//     failureRedirect : '/login',
+//     failureFlash : true
+// }));
 app.get('/login',function(req,res){
-    // res.sendfile(__dirname+"/public/m_login.html");
-    res.render('login',{message : req.flash('loginMessage')});
+    res.sendfile(__dirname+"/public/m_login.html");
 });
 app.post('/login',function(req,res){
     console.log('/login 호출됨');
@@ -215,6 +238,20 @@ app.post('/login',function(req,res){
     }
 });
 
+// app.get('/logout',function(req,res){
+//     console.log('/logout 패스 요청됨');
+//     req.logOut();
+//     res.redirect('/');
+// });
+// app.get('/signup',function(req,res){
+//     console.log('/signup 패스 요청됨');
+//     res.render('signup',{message : req.flash('signupMessage')});
+// });
+// app.post('/signup',passport.authenticate('local-signup',{
+//     successRedirect : 'profile',
+//     failureRedirect : '/signup',
+//     failureFlash : true
+// }));
 app.get('/register',function(req,res){
     res.sendfile(__dirname+'/public/m_register.html');
 })
@@ -243,7 +280,16 @@ app.post('/register',function(req,res){
         res.send('데이터베이스 연결 실패');
     }
 })
+// app.get('/profile',isLoggedIn,function(req,res){
+//     console.lof('/profile 패스 요청됨');
+//     console.dir(req,user);
 
+//     if(Array.isArray(req.user)){
+//         res.render('profile.ejs',{user : req.user[0]._doc});
+//     }else{
+//         res.render('profile.ejs',{user:req.user});
+//     }
+// });
 app.get('/userList',function(req,res){
     res.sendfile(__dirname+'/public/userList.html');
 })

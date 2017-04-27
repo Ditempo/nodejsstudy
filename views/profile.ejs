@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width,height=devie-height,initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        
+        <style>
+            body{
+                padding-top : 80px;
+            }
+            @font-face{
+                font-family: 'Nanum Gothic';
+                font-style: nomal;
+                font-weight: 400;
+                src : url('/public/NanumGothic.ttf');
+            }
+            h1,p,a{font-family: 'Nanum Gothic'}
+        </style>   
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header text-center">
+                <h1><span class="fa fa-anchor"></span> 사용자 프로필</h1>
+                <a href="/logout" class="btn btn-default btn-sm">로그아웃</a>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="well">
+                        <h3><span class="fa fa-user"></span>로컬 프로필 정보</h3>
+                        <br>
+                        <p>
+                            <strong>이름</strong> : <%= user.name %><br><br>
+                            <strong>이메일</strong> : <%= user.email %>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
