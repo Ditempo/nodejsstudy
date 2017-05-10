@@ -4,7 +4,7 @@ module.exports={
     db_schemas : [
         {
             file:'./mongodbLogin_UserSchema',
-            collection:'user',
+            collection:'emailUser',
             schemaName:'UserSchema',
             modelName:'UserModel'
         }

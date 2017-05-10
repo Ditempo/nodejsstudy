@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Socket.io Chat Example</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div class="container">
+            <h3>Socket.io Chat Example</h3>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="msgForm">Message: </label>
+                    <input type="text" class="form-control" id="msgForm">
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+            <div id="chatLogs">    
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+         <script src="/nodeSocketioExample.js"></script>
+        <script>
+            $(function(){
+
+                var socket=io();
+
+                socket.emit("login",{
+                    name: makeRandomName(),
+                    userid: name+"@gmail.com"
+                });
+
+                socket.on("login",function(data){
+                    $("#chatLogs").append("<div><strong>"+data+"</strong> has joined</div>");
+                });
+
+                socket.on("chat",function(data){
+                    $("#chatLogs").append("<div>"+data.msg+" : from <strong>"+ data.from.name+"</strong></div>");
+                });
+                $("form").submit(function(e){
+                    e.preventDefault();
+                    var $msgForm= $("#msgForm");
+
+                    socket.emit("chat",{msg: $msgForm.val() });
+                    $msgForm.val("");
+                });
+
+                function makeRandomName(){
+                    var name="";
+                    var possible="abcdefghijklmnopqrstuvwxyz";
+                    for(var i=0;i<3;i++){
+                        name+=possible.charAt(Math.floor(Math.random()*possible.length));
+                    }
+                    return name;
+                }
+            });
+        </script>
+    </body>
+</html>
