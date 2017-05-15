@@ -8,21 +8,21 @@ Schema.createSchema = function(mongoose){
 
     UserSchema=mongoose.Schema({
             email : {type : String, 'default' : ''},
-            // id: {type:String,required:true,unique:true},
+            id: {type:String,required:true,unique:true},
             name: {type: String,index:'hashed'},
             password: {type: String,required:true},
-            // age: {type: Number,'default':-1},
+            age: {type: Number,'default':-1},
             created_at: {type: Date,index:{unique:false},'default':Date.now},
             updated_at: {type: Date,index:{unique:false},'default':Date.now}
         });
 
-        // UserSchema.static('findById',function(id,callback){
-        //     console.log('in findById');
-        //     return this.findOne({id:id},callback);
-        // });
-        UserSchema.path('findByEmail',function(email, callback){
-            return this.find({email : email},callback);
-        })
+        UserSchema.static('findById',function(id,callback){
+            console.log('in findById');
+            return this.findOne({id:id},callback);
+        });
+        // UserSchema.path('findByEmail',function(email, callback){
+        //     return this.find({email : email},callback);
+        // })
         UserSchema.path('email').validate(function(email){
             return email.length;
         },'email 칼럼의 값이 없습니다.');

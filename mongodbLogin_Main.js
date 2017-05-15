@@ -1,15 +1,18 @@
-var express=require("express");
-var http=require("http");
-var path=require('path');
-var bodyParser=require('body-parser');
-var cookieParser=require('cookie-parser');
-var expressSession=require('express-session');
+var express=require("express")
+    ,http=require("http")
+    ,path=require('path');
+
+var bodyParser=require('body-parser')
+    ,cookieParser=require('cookie-parser')
+    ,expressSession=require('express-session');
+
 var ejs=require('ejs-locals');
-var mongodb=require('mongodb');
-var mongoose=require('mongoose');
-var passport=require("passport");
-var flash=require('connect-flash');
-var LocalStrategy=require('passport-local').Strategy;
+
+var mongodb=require('mongodb')
+    ,mongoose=require('mongoose');
+// var passport=require("passport");
+// var flash=require('connect-flash');
+// var LocalStrategy=require('passport-local').Strategy;
 
 var app=express();
 
@@ -32,102 +35,38 @@ app.use(expressSession({
     saveUninitialized:true
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(flash());
 
-var database;
-var UserSchema;
-var UserModel;
+var database
+    ,UserSchema
+    ,UserModel;
+
 function connectDB(){
+    
     var databaseUrl='mongodb://localhost:27017/shopping';
     
     mongoose.connect(databaseUrl);
     database=mongoose.connection;
+    // mongoose.Promise=global.Promise;
+    // mongoose.connect(databaseUrl);
+    // database= mongoose.Connection;
 
     database.on('error',console.error.bind(console, 'mongoose connection error'));
+
     database.on('open',function(){
         console.log('데이터베이스에 연결되었습니다. : '+databaseUrl);
 
         UserSchema=require(__dirname+'/mongodbLogin_UserSchema.js').createSchema(mongoose);
-        UserModel=mongoose.model("users",UserSchema);
         
+        UserModel=mongoose.model("users",UserSchema);
         console.log('user 정의함');
     });
     database.on('disconneted',connectDB);
 }
 
-// passport.serializeUser(function(user, done){
-//     console.log('serializeUser() 호출됨');
-//     console.dir(user);
 
-//     done(null,user);
-// });
-// passport.deserializeUser(function(user,done){
-//     console.log('deserializeUser() 호출됨');
-//     console.dir(user);
-
-//     done(null,user);
-// });
-// passport.use('local-login',new LocalStrategy({
-//     usernameField : 'email',
-//     passwordField : 'password',
-//     passReqToCallback : true
-//     },function(req,id,password,done){
-//         console.log('passport의 local-login 호출됨 : '+id+','+password);
-//         var database= app.get('database');
-//         database.UserModel.findOne({'email':email},function(err,user){
-//         if(err){return done(err);}
-//         if(!user){
-//             console.log('계정이 일치하지 않음');
-//             return done(null,false,req.flash('loginMessage','등록된 계정이 없습니다'));
-//         }
-
-//         var authenticated= user.authenticate(password, user._doc.password);
-
-//         if(!authenticated){
-//             console.log('비밀번호가 일치 하지 않음');
-//             return done(null,false, req.flash('loginMessage','비밀번호가 일치하지 않습니다'));
-//         }
-//         console.log('계정과 비밀번호가 일치함');
-//         return done(null,user);
-//     });
-// }));
-// passport.use('login-signup',new LocalStrategy({
-//     usernameField: 'email',
-//     passwordField : 'password',
-//     passReqToCallback : true
-//     },function(req,email,password,done){
-//         var paramName=req.body.name;
-//         console.log('passport의 local-signup 호출됨 : ' +email+','+password+','+paramName);
-
-//         process.nextTick(function(){
-//             var database=app.get('database');
-//             database.UserModel.findOne({'email':email},function(err,user){
-//                 if(err){return done(err);}
-//                 if(user){
-//                     console.log('기존에 계정이 있음');
-//                     return done(null,false,req.flash('signupMessage','계정이 이미 있습니다'));
-//                 }else{
-//                     var user=new database.UserModel({'email':email,'password':password,'name':paramName});
-//                     user.save(function(err){
-//                         if(err){throw err;}
-//                         console.log('사용자 데이터 추가함');
-//                         return done(null,user);
-//                     });
-//                 }
-//             });
-//         });
-// }));
-// function isLoggedIn(req,res,next){
-//     console.log('isLoggedIn 미들웨어 호출됨');
-
-//     if(req.isAuthenticated()){
-//         return next();
-        
-//     }
-//     res.redirect('/');
-// }
 var authUser=function(database,id,password,callback){
     console.log('in authUser');
 
