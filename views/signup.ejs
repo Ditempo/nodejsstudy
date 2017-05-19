@@ -3,19 +3,54 @@
     <head>
         <title>signup</title>
         <meta charset="UTF-8">
+         <style>
+            body{
+                padding-top : 80px;
+            }
+            @font-face{
+                font-family: 'Nanum Gothic';
+                font-style: nomal;
+                font-weight: 400;
+                src : url('/public/NanumGothic.ttf');
+            }
+            h1,p,a{font-family: 'Nanum Gothic'}
+        </style> 
     </head>
     <body>
-         <h1>signup</h1>
-        <form id='signupform' action="/signup" method="post">
-            <p> id </p>
-            <p> <input type='text' name='id' id='id' placeholder='아이디를 입력하세요'></p>
-            <p> email</p>
-            <p> <input type='text' name='email' id='email' placeholder='email을 입력하세요'></p>
-            <p> name</p>
-            <p> <input type='text' name='username' id='username' placeholder='이름을 입력하세요'></p>
-            <p> password</p>
-            <p> <input type='password' name='password'id='password' placeholder='비밀번호를 입력하세요'></p>           
-            <p> <input type='submit' name='회원가입완료'></p>
-      </form>
+        <div class="container">
+            <div class="col-sm-6 col-sm-offset-3">
+                <h1><span class="fa fa-sign-in"></span>회원가입</h1>
+                <% if(message.length > 0 { %>
+                    <div class="alert alert-danger"><%= message %>
+                    </div>
+                <% } %>
+                <form action="/signup" method="post">
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="text" name="email" value="" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>비밀번호</label>
+                        <input type="password" name="password" value="" class="form-control">
+                    </div>
+                    <!--<div class="form-group">
+                        <label>비밀번호</label>
+                        <input type="password" name="password" value="" class="form-control">
+                    </div>-->
+                    <div class="form-group">
+                        <label>별명</label>
+                        <input type="text" name="name" value="" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-warning btn-lg">회원가입</button>
+                </form>
+
+                <hr>
+
+                <p>이미 계정이 있으신가요? <a href="/login">로그인하기</a></p>
+                <p><a href="/">홈으로</a>.</p>
+            </div>
+        </div>
+         
     </body>
 </html>
