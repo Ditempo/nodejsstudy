@@ -60,7 +60,7 @@ var database
     ,UserModel;
 
 function connectDB(){
-    var databaseUrl='mongodb://localhost:27017/shopping';
+    var databaseUrl='mongodb://localhost:27017/shopping/database';
 
     console.log('데이터베이스 연결을 시도합니다.');
     mongoose.Promise= global.Promise;
@@ -72,7 +72,7 @@ function connectDB(){
 
         console.log('데이터베이스에 연결되었습니다. : '+databaseUrl);
 
-        createUserSchema();
+        createSchema();
         
         
     });
@@ -82,14 +82,13 @@ function connectDB(){
     });
 }
 
-function createUserSchema(){
+function createSchema(){
 
-    UserSchema=require(__dirname+'/ReMongodbLoginUserSchema.js').createSchema(mongoose);
+    UserSchema= require(__dirname+'/ReMongodbLoginUserSchema.js').createSchema(mongoose);
         
     UserModel= mongoose.model("reusers",UserSchema);
     console.log('UserModel 정의함');
 
-    
 }
 
 

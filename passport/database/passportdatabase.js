@@ -3,37 +3,37 @@ var crypto= require('crypto');
 var Schema={};
 
 Schema.createSchema= function(mongoose){
-    // var UserSchema = mongoose.Schema({
-	// 	email: {type: String, 'default':''}
-	//     , hashed_password: {type: String, required: true, 'default':''}
-	//     , name: {type: String, index: 'hashed', 'default':''}
-	//     , salt: {type:String, required:true}
-	//     , created_at: {type: Date, index: {unique: false}, 'default': Date.now}
-	//     , updated_at: {type: Date, index: {unique: false}, 'default': Date.now} 
-	// });
-    // UserSchema.static('findByEmail', function(email,callback){
-    //     return this.find({email:email},callback);
-    // });
-
-    // UserSchema.static('findAll',function(callback){
-    //     return this.find({ },callback);
-    // });
     var UserSchema= mongoose.Schema({
-        id : {type : String, required : true, unique : true},
+        email : {type : String,'default':''},
         hashed_password : {type : String, required : true},
         salt : {type : String, required : true},
         name : {type : String, index : 'hashed'},
-        age : {type : Number, 'default' : -1},
         created_at : {type : Date, index : {unique : false},'default' : Date.now},
         updated_at : {type : Date, index : {unique : false},'default' : Date.now} 
    });
-    UserSchema.static('findById', function(id,callback){
-        return this.find({id:id},callback);
+    UserSchema.static('findByEmail', function(email,callback){
+        return this.find({email:email},callback);
     });
 
     UserSchema.static('findAll',function(callback){
         return this.find({ },callback);
     });
+//     var UserSchema= mongoose.Schema({
+//         id : {type : String, required : true, unique : true},
+//         hashed_password : {type : String, required : true},
+//         salt : {type : String, required : true},
+//         name : {type : String, index : 'hashed'},
+//         age : {type : Number, 'default' : -1},
+//         created_at : {type : Date, index : {unique : false},'default' : Date.now},
+//         updated_at : {type : Date, index : {unique : false},'default' : Date.now} 
+//    });
+//     UserSchema.static('findById', function(id,callback){
+//         return this.find({id:id},callback);
+//     });
+
+//     UserSchema.static('findAll',function(callback){
+//         return this.find({ },callback);
+//     });
    UserSchema
         .virtual('password')
         .set(function(password){
@@ -64,18 +64,18 @@ Schema.createSchema= function(mongoose){
             return this.encryptPassword(plainText)==this.hashed_password;
         }
     });
-    // UserSchema.path('id').validate(function(email){
-    //     return email.length;
-    // },'email 칼럼의 값이 없습니다.');
-    // UserSchema.path('hashed_password').validate(function(hashed_password){
-    //     return hashed_password.length;
-    // },'hashed_password 칼럼의 값이 없습니다.');
-    UserSchema.path('id').validate(function(id){
-        return id.length;
-    },'id 칼럼의 값이 없습니다.');
+    UserSchema.path('email').validate(function(email){
+        return email.length;
+    },'email 칼럼의 값이 없습니다.');
     UserSchema.path('hashed_password').validate(function(hashed_password){
         return hashed_password.length;
-    },'hashed_password 칼럼의 값이 없습니다.');    
+    },'hashed_password 칼럼의 값이 없습니다.');
+    // UserSchema.path('id').validate(function(id){
+    //     return id.length;
+    // },'id 칼럼의 값이 없습니다.');
+    // UserSchema.path('hashed_password').validate(function(hashed_password){
+    //     return hashed_password.length;
+    // },'hashed_password 칼럼의 값이 없습니다.');    
 
     console.log('UserSchema 정의함');
 
