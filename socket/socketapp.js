@@ -10,7 +10,7 @@ var bodyParser= require('body-parser')
 
 var socketio= require('socket.io')
     ,cors= require('cors');
-
+var Adapter = require('socket.io-adapter');
 // var MongoClient= require('mongodb').MongoClient
 //     ,mongoose= require('mongoose')
 //     ,crypto= require('crypto');
@@ -73,14 +73,16 @@ var server= http.createServer(app).listen(app.get('port'), function(){
     // database.init(app, config);
 });
 
+var login_ids= {};
+
 var io= socketio.listen(server);
 console.log('socket.io 요청을 받아들일 준비가 되었습니다.');
 
 io.sockets.on('connection', function(socket) {
-	var login_ids= {};
+	
     console.log('connection info :', socket.request.connection._peername);
-    socket.remoteAddress = socket.request.connection._peername.address;
-	socket.remotePort = socket.request.connection._peername.port;
+    socket.remoteAddress= socket.request.connection._peername.address;
+    socket.remotePort= socket.request.connection._peername.port;
 
     socket.on('login',function(login){
         console.log('login 이벤트를 받았습니다.');
@@ -103,20 +105,27 @@ io.sockets.on('connection', function(socket) {
             console.dir('나를 포함한 모든 클라이언트에 message 이벤트를 전송합니다.');
             io.sockets.emit('message',message);
         }else{
-            if(login_ids[message.recepient]){
-                io.sockets.connected[login_ids[message.recepient]].emit('message',message);
+            if(message.command == 'chat'){
+                if(login_ids[message.recepient]){
+                    io.sockets.connected[login_ids[message.recepient]].emit('message',message);
 
-                sendResponse(socket, 'message', '200', '메시지를 전송했습니다.');
-            }else{
-                sendResponse(socket, 'login', '404', '상대방의 로그인 ID를 찾을 수 없습니다.');
+                    sendResponse(socket, 'message', '200', '메시지를 전송했습니다.');
+                }else{
+                    sendResponse(socket, 'login', '404', '상대방의 로그인 ID를 찾을 수 없습니다.');
+                }
+            }else if(message.command == 'groupchat'){
+                io.sockets.in(message.recepient).emit('message',message);
+
+                sendResponse(socket,'message','200','방['+message.recepient+']의 모든 사용자들에게 메시지를 전송했습니다.');
             }
+            
         }
     });
     socket.on('room',function(room){
         console.log('room 이벤트를 받았습니다.');
         console.dir(room);
 
-        if(room.command=='create'){
+        if(room.command== 'create'){
             if(io.sockets.adapter.rooms[room.roomId]){
                 console.log('방이 이미 만들어져 있습니다.');
             }else{
@@ -129,13 +138,12 @@ io.sockets.on('connection', function(socket) {
                 curRoom.name= room.roomName;
                 curRoom.owner= room.roomOwner;
             }
-        }else if(room.command=='update'){
+        }else if(room.command== 'update'){
             
             var curRoom= io.sockets.adapter.rooms[room.roomId];
                 curRoom.id= room.roomId;
                 curRoom.name= room.roomName;
                 curRoom.owner= room.roomOwner;
-                console.log(curRoom.id);
         }else if(room.command=='delete'){
             socket.leave(room.roomId);
 
@@ -144,6 +152,14 @@ io.sockets.on('connection', function(socket) {
             }else{
                 console.log('방이 만들어져 있지 않습니다.');
             }
+        }else if(room.command=='join'){
+            socket.join(room.roomId);
+
+            sendResponse(socket, 'room','200', '방에 입장했습니다.');
+        }else if(room.command== 'leave'){
+            socket.leave(room.roomId);
+
+            sendResponse(socket,'room','200','방에서 나갔습니다.');
         }
 
         var roomList= getRoomList();
